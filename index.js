@@ -1,64 +1,79 @@
 const express = require('express');
 const http = require('http');
-const socketIo = require('socket.io');
+const WebSocket = require('ws');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 
 const app = express();
 const server = http.createServer(app);
-const io = socketIo(server, {
-    cors: {
-        origin: "*",
-        methods: ["GET", "POST"]
-    }
-});
+const wss = new WebSocket.Server({ server });
 
 app.use(bodyParser.json());
 app.use(cors());
 
 let connectedUsers = {};
-let gameMasterSocketId = null;
+let gameMasterSocket = null;
 
-// Middleware to log all incoming and outgoing messages
-io.use((socket, next) => {
-    const emit = socket.emit;
-    socket.emit = function (...args) {
-        console.log('Emitting event:', args);
-        emit.apply(socket, args);
-    };
-    next();
-});
+// Helper function to send JSON messages
+function sendJson(socket, type, data) {
+    const message = JSON.stringify({ type, data });
+    socket.send(message);
+}
 
-io.on('connection', (socket) => {
+wss.on('connection', (socket) => {
     console.log('A user connected');
 
-    socket.on('message', (msg) => {
-        console.log('Message received: ' + msg);
-    });
+    socket.on('message', (message) => {
+        const { type, data } = JSON.parse(message);
+        console.log('Message received:', type, data);
 
-    socket.on('identify', (data) => {
-        connectedUsers[socket.id] = data;
-        console.log('User identified:', data);
-    });
+        switch (type) {
+            case 'identify':
+                connectedUsers[socket._socket.remotePort] = { socket, ...data };
+                console.log('User identified:', data);
+                if (data.type === 'GameMaster') {
+                    gameMasterSocket = socket;
+                    console.log('Game Master registered with id:', socket._socket.remotePort);
+                }
+                break;
 
-    socket.on("registerGameMaster", () => {
-       gameMasterSocketId = socket.id;
-       console.log('Game Master registered with id:', gameMasterSocketId);
-    });
+            case 'new-player':
+                const player = JSON.parse(data);
+                console.log('Received new-player event:', JSON.stringify(player, null, 2));
+                if (gameMasterSocket) {
+                    console.log("Emitting new-player event to Game Master");
+                    sendJson(gameMasterSocket, 'new-player', player);
+                }
+                break;
 
-    socket.on('new-player', (playerJson) => {
-        const player = JSON.parse(playerJson);
-        console.log('Received new-player event:' + JSON.stringify(player, null, 2))
+            case 'start-game-gm':
+                console.log("Emitting start-game event to all clients");
+                wss.clients.forEach(client => {
+                    if (client.readyState === WebSocket.OPEN) {
+                        sendJson(client, 'start-game', {});
+                    }
+                });
+                break;
 
-        if(gameMasterSocketId) {
-            console.log("Emitting new-player event to Game Master");
-            socket.to(gameMasterSocketId).emit('new-player', player);
+            default:
+                console.log('Unknown message type:', type);
+                break;
         }
     });
 
-    socket.on('disconnect', () => {
-        console.log('A user disconnected' + connectedUsers[socket.id]);
+    socket.on('close', () => {
+        const userInfo = connectedUsers[socket._socket.remotePort];
+        if (userInfo) {
+            console.log(`A user disconnected: Type = ${userInfo.type}, ID = ${userInfo.id}`);
+            if (userInfo.type === 'GameMaster') {
+                gameMasterSocket = null;
+            }
+            delete connectedUsers[socket._socket.remotePort];
+        } else {
+            console.log('A user disconnected, but no user information found.');
+        }
     });
+
 });
 
 server.listen(8080, () => {

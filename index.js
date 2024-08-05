@@ -29,9 +29,10 @@ wss.on('connection', (socket) => {
 
         switch (type) {
             case 'identify':
-                connectedUsers[socket._socket.remotePort] = { socket, ...data };
+                connectedUsers[socket._socket.remotePort] = { socket, data };
                 console.log('User identified:', data);
-                if (data.type === 'GameMaster') {
+                const id_data = JSON.parse(data);
+                if (id_data.type === 'GameMaster') {
                     gameMasterSocket = socket;
                     console.log('Game Master registered with id:', socket._socket.remotePort);
                 }
@@ -62,7 +63,7 @@ wss.on('connection', (socket) => {
     });
 
     socket.on('close', () => {
-        const userInfo = connectedUsers[socket._socket.remotePort];
+        const userInfo = JSON.parse(connectedUsers[socket._socket.remotePort].data);
         if (userInfo) {
             console.log(`A user disconnected: Type = ${userInfo.type}, ID = ${userInfo.id}`);
             if (userInfo.type === 'GameMaster') {

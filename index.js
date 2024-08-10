@@ -47,6 +47,15 @@ wss.on('connection', (socket) => {
                 }
                 break;
 
+            case 'player-score':
+                const player_score = JSON.parse(data);
+                console.log('Received player-score event:', JSON.stringify(player_score, null, 2));
+                if (gameMasterSocket) {
+                    console.log("Emitting player-score event to Game Master");
+                    sendJson(gameMasterSocket, 'player-score', player_score);
+                }
+                break;
+
             case 'start-game-gm':
                 console.log("Emitting start-game event to all clients");
                 wss.clients.forEach(client => {

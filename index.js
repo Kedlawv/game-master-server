@@ -13,6 +13,7 @@ app.use(cors());
 
 let connectedUsers = {};
 let gameMasterSocket = null;
+let currentPlayers = {};
 
 // Helper function to send JSON messages
 function sendJson(socket, type, data) {
@@ -40,6 +41,7 @@ wss.on('connection', (socket) => {
 
             case 'new-player':
                 const player = JSON.parse(data);
+                currentPlayers[player.id] = player;
                 console.log('Received new-player event:', JSON.stringify(player, null, 2));
                 if (gameMasterSocket) {
                     console.log("Emitting new-player event to Game Master");
@@ -63,6 +65,14 @@ wss.on('connection', (socket) => {
                         sendJson(client, 'start-game', {});
                     }
                 });
+                break;
+
+            case 'get-current-players':
+                console.log('Received get-current-players event');
+                if (gameMasterSocket) {
+                    console.log("Emitting current-players event to Game Master");
+                    sendJson(gameMasterSocket, 'current-players', currentPlayers);
+                }
                 break;
 
             default:

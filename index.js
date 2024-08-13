@@ -74,6 +74,14 @@ wss.on('connection', (socket) => {
                     sendJson(gameMasterSocket, 'current-players', currentPlayers);
                 }
                 break;
+            case 'init-new-game':
+                console.log("Initialising new game. Clearing player list.");
+                currentPlayers = {};
+                if (gameMasterSocket) {
+                    console.log("Emitting current-players event to Game Master");
+                    sendJson(gameMasterSocket, 'current-players', currentPlayers);
+                }
+                break;
 
             default:
                 console.log('Unknown message type:', type);

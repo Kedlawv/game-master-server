@@ -2,8 +2,9 @@
   "name": "game-master-server",
   "version": "1.0.0",
   "description": "",
-  "main": "index-Sokcet-IO.js",
+  "main": "index.js",
   "scripts": {
+    "start": "node index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
@@ -12,9 +13,14 @@
   "dependencies": {
     "cors": "^2.8.5",
     "express": "^4.19.2",
-    "socket.io": "^4.7.5"
+    "socket.io": "^4.7.5",
+    "ws": "^8.12.0",
+    "body-parser": "^1.19.1"
   },
   "devDependencies": {
     "@types/socket.io": "^3.0.2"
+  },
+  "engines": {
+    "node": ">=18.0.0"
   }
 }

@@ -3,6 +3,8 @@ const http = require('http');
 const WebSocket = require('ws');
 const bodyParser = require('body-parser');
 const cors = require('cors');
+const url = require('url');
+
 
 const app = express();
 const server = http.createServer(app);
@@ -16,26 +18,26 @@ let gameMasterSocket = null;
 let currentPlayers = {};
 
 // Helper function to send JSON messages
-function sendJson(socket, type, data) {
+function sendJson(ws, type, data) {
     const message = JSON.stringify({ type, data });
-    socket.send(message);
+    ws.send(message);
 }
 
-wss.on('connection', (socket) => {
-    console.log('A user connected');
+wss.on('connection', (ws, request) => {
+    console.log('A user connected', request.headers);
 
-    socket.on('message', (message) => {
+    ws.on('message', (message) => {
         const { type, data } = JSON.parse(message);
         console.log('Message received:', type, data);
 
         switch (type) {
             case 'identify':
-                connectedUsers[socket._socket.remotePort] = { socket, data };
+                connectedUsers[ws._socket.remotePort] = { socket: ws, data };
                 console.log('User identified:', data);
                 const id_data = JSON.parse(data);
                 if (id_data.type === 'GameMaster') {
-                    gameMasterSocket = socket;
-                    console.log('Game Master registered with id:', socket._socket.remotePort);
+                    gameMasterSocket = ws;
+                    console.log('Game Master registered with id:', ws._socket.remotePort);
                 }
                 break;
 
@@ -89,21 +91,30 @@ wss.on('connection', (socket) => {
         }
     });
 
-    socket.on('close', () => {
-        const userInfo = JSON.parse(connectedUsers[socket._socket.remotePort].data);
-        if (userInfo) {
-            console.log(`A user disconnected: Type = ${userInfo.type}, ID = ${userInfo.id}`);
-            if (userInfo.type === 'GameMaster') {
-                gameMasterSocket = null;
-            }
-            delete connectedUsers[socket._socket.remotePort];
-        } else {
-            console.log('A user disconnected, but no user information found.');
+    ws.on('close', () => { // Check if the user was identified and exists in connectedUsers
+
+        if (connectedUsers[ws._socket.remotePort]) {
+        const userInfo = JSON.parse(connectedUsers[ws._socket.remotePort].data);
+        console.log(`A user disconnected: Type = ${userInfo.type}, ID = ${userInfo.id}`);
+
+        // If the disconnected user is the Game Master, clear the gameMasterSocket
+        if (userInfo.type === 'GameMaster') {
+            gameMasterSocket = null;
         }
+        // Remove the user from connectedUsers
+        delete connectedUsers[ws._socket.remotePort];
+    } else {
+        console.log('A user disconnected, but no user information found.');
+    }
     });
 
 });
 
-server.listen(8080, () => {
-    console.log('Server running at http://localhost:8080/');
+app.get('/', (req, res) => {
+    res.send('WebSocket server is running.');
+});
+
+const PORT = process.env.PORT || 8080;  // Use the PORT environment variable if provided, otherwise default to 8080
+server.listen(PORT, () => {
+    console.log(`Server running at http://localhost:${PORT}/`);
 });

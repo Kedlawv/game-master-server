@@ -4,7 +4,8 @@ const WebSocket = require('ws');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const url = require('url');
-
+const firestore = require('./firestore');
+const allowedOrigin = 'https://storage.googleapis.com';
 
 const app = express();
 const server = http.createServer(app);
@@ -15,7 +16,6 @@ app.use(cors());
 
 let connectedUsers = {};
 let gameMasterSocket = null;
-let currentPlayers = {};
 
 // Helper function to send JSON messages
 function sendJson(ws, type, data) {
@@ -24,9 +24,19 @@ function sendJson(ws, type, data) {
 }
 
 wss.on('connection', (ws, request) => {
-    console.log('A user connected', request.headers);
 
-    ws.on('message', (message) => {
+    const origin = request.headers.origin;
+
+    if (origin !== allowedOrigin) {
+        console.log('Connection from disallowed origin:', origin);
+        ws.terminate(); // Disconnect the client immediately
+        return;
+    }
+
+    console.log('A user connected', request.headers);
+    console.log('From origin: ', request.headers.origin);
+
+    ws.on('message', async (message) => {
         const { type, data } = JSON.parse(message);
         console.log('Message received:', type, data);
 
@@ -43,12 +53,12 @@ wss.on('connection', (ws, request) => {
 
             case 'new-player':
                 const player = JSON.parse(data);
-                currentPlayers[player.id] = player;
                 console.log('Received new-player event:', JSON.stringify(player, null, 2));
                 if (gameMasterSocket) {
                     console.log("Emitting new-player event to Game Master");
                     sendJson(gameMasterSocket, 'new-player', player);
                 }
+                await firestore.addPlayerToFirestore(player);
                 break;
 
             case 'player-score':
@@ -58,6 +68,7 @@ wss.on('connection', (ws, request) => {
                     console.log("Emitting player-score event to Game Master");
                     sendJson(gameMasterSocket, 'player-score', player_score);
                 }
+                await firestore.addPlayerToFirestore(player_score);
                 break;
 
             case 'start-game-gm':
@@ -71,14 +82,16 @@ wss.on('connection', (ws, request) => {
 
             case 'get-current-players':
                 console.log('Received get-current-players event');
+                const current_players = await firestore.getAllPlayersFromFirestore();
                 if (gameMasterSocket) {
                     console.log("Emitting current-players event to Game Master");
-                    sendJson(gameMasterSocket, 'current-players', currentPlayers);
+                    sendJson(gameMasterSocket, 'current-players', current_players);
                 }
                 break;
             case 'init-new-game':
                 console.log("Initialising new game. Clearing player list.");
-                currentPlayers = {};
+                const currentPlayers = {};
+                await firestore.clearPlayersCollection();
                 if (gameMasterSocket) {
                     console.log("Emitting current-players event to Game Master");
                     sendJson(gameMasterSocket, 'current-players', currentPlayers);

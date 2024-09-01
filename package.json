@@ -15,7 +15,9 @@
     "express": "^4.19.2",
     "socket.io": "^4.7.5",
     "ws": "^8.12.0",
-    "body-parser": "^1.19.1"
+    "body-parser": "^1.19.1",
+    "@google-cloud/firestore": "^6.8.0"
+
   },
   "devDependencies": {
     "@types/socket.io": "^3.0.2"

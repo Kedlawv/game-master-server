@@ -21,7 +21,7 @@ const addPlayerHighScore = async (player)  => {
         // Add the player data to Firestore using the player's ID as the document ID
         await playersCollection.doc(player.id).set({
             playerId: player.id,
-            playerName: player.name,
+            playerName: player.playerName,
             score: player.score,
             timestamp: FieldValue.serverTimestamp()
         });
@@ -34,8 +34,31 @@ const addPlayerHighScore = async (player)  => {
     }
 };
 
+const getHighScores = async () => {
+    try {
+        const playersCollection = firestore.collection(HIGH_SCORE_COLLECTION);
+        const snapshot = await playersCollection.orderBy('score', 'desc').get();
+
+        if (snapshot.empty) {
+            console.log('No matching documents.');
+            return [];
+        }
+
+        let highscores = [];
+        snapshot.forEach(doc => {
+            highscores.push(doc.data());
+        });
+
+        return highscores;
+    } catch (error) {
+        console.error('Error fetching high scores from Firestore:', error);
+        return [];
+    }
+};
+
 // Export the Firestore instance for use in other files
 module.exports = {
     firestore,
-    addPlayerHighScore
+    addPlayerHighScore,
+    getHighScores
 };

@@ -62,6 +62,21 @@ app.post('/api/submitScore', async (req, res) => {
     }
 });
 
+app.get('/api/highscores', async (req, res) => {
+    try {
+        const highscores = await firestore.getHighScores();
+
+        if (highscores.length > 0) {
+            return res.json({ success: true, highscores });
+        } else {
+            return res.status(404).json({ success: false, message: 'No high scores found' });
+        }
+    } catch (error) {
+        console.error('Error fetching high scores:', error);
+        return res.status(500).json({ success: false, message: 'Internal server error' });
+    }
+});
+
 // Start the server on port 3000
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {

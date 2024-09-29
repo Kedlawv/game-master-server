@@ -16,6 +16,7 @@ app.use(cors());
 
 let connectedUsers = {};
 let gameMasterSocket = null;
+let firestoreEnabled = false;
 
 // Helper function to send JSON messages
 function sendJson(ws, type, data) {
@@ -29,7 +30,7 @@ wss.on('connection', (ws, request) => {
 
     if (origin !== allowedOrigin) {
         console.log('Connection from disallowed origin:', origin);
-        ws.terminate(); // Disconnect the client immediately
+        ws.close(1008, "Policy Violation: Disallowed Origin");
         return;
     }
 
@@ -48,6 +49,11 @@ wss.on('connection', (ws, request) => {
                 if (id_data.type === 'GameMaster') {
                     gameMasterSocket = ws;
                     console.log('Game Master registered with id:', ws._socket.remotePort);
+
+                    if(gameMasterSocket) {
+                        sendJson(gameMasterSocket, "persistence-status", firestoreEnabled);
+                        console.log('Sent persistence status to gm');
+                    }
                 }
                 break;
 
@@ -58,7 +64,9 @@ wss.on('connection', (ws, request) => {
                     console.log("Emitting new-player event to Game Master");
                     sendJson(gameMasterSocket, 'new-player', player);
                 }
-                await firestore.addPlayerToFirestore(player);
+                if (firestoreEnabled) {
+                    await firestore.addPlayerToFirestore(player);
+                }
                 break;
 
             case 'player-score':
@@ -68,7 +76,9 @@ wss.on('connection', (ws, request) => {
                     console.log("Emitting player-score event to Game Master");
                     sendJson(gameMasterSocket, 'player-score', player_score);
                 }
-                await firestore.addPlayerToFirestore(player_score);
+                if (firestoreEnabled) {
+                    await firestore.addPlayerToFirestore(player_score);
+                }
                 break;
 
             case 'start-game-gm':
@@ -82,7 +92,12 @@ wss.on('connection', (ws, request) => {
 
             case 'get-current-players':
                 console.log('Received get-current-players event');
-                const current_players = await firestore.getAllPlayersFromFirestore();
+                let current_players;
+                if (firestoreEnabled) {
+                    current_players = await firestore.getAllPlayersFromFirestore();
+                } else {
+                    current_players = {}
+                }
                 if (gameMasterSocket) {
                     console.log("Emitting current-players event to Game Master");
                     sendJson(gameMasterSocket, 'current-players', current_players);
@@ -91,7 +106,9 @@ wss.on('connection', (ws, request) => {
             case 'init-new-game':
                 console.log("Initialising new game. Clearing player list.");
                 const currentPlayers = {};
-                await firestore.clearPlayersCollection();
+                if (firestoreEnabled) {
+                    await firestore.clearPlayersCollection();
+                }
                 if (gameMasterSocket) {
                     console.log("Emitting current-players event to Game Master");
                     sendJson(gameMasterSocket, 'current-players', currentPlayers);
@@ -127,7 +144,17 @@ app.get('/', (req, res) => {
     res.send('WebSocket server is running.');
 });
 
+app.get('/firestore!!', (req, res) => {
+    firestoreEnabled = !firestoreEnabled;
+    res.send(firestoreEnabled);
+
+    if(gameMasterSocket) {
+        sendJson(gameMasterSocket, "persistence-status", firestoreEnabled);
+    }
+});
+
 const PORT = process.env.PORT || 8080;  // Use the PORT environment variable if provided, otherwise default to 8080
 server.listen(PORT, () => {
     console.log(`Server running at http://localhost:${PORT}/`);
+    console.log(`version: 0.0.3`);
 });

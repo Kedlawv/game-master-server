@@ -2,6 +2,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const crypto = require('crypto');
+const { secretKey } = require('./config');
 
 // Create an express app
 const app = express();
@@ -9,9 +10,6 @@ const firestore = require('./firestore');
 
 // Middleware to parse JSON request bodies
 app.use(bodyParser.json());
-
-// Secret key used for hashing (should be the same as in your game)
-const secretKey = 'yourSecretKey';
 
 // Function to validate the player's score by hashing their ID and score
 function validateScore(player, clientHash, secretKey) {

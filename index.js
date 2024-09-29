@@ -1,133 +1,71 @@
+// Import the required modules
 const express = require('express');
-const http = require('http');
-const WebSocket = require('ws');
 const bodyParser = require('body-parser');
-const cors = require('cors');
-const url = require('url');
-const firestore = require('./firestore');
-const allowedOrigin = 'https://storage.googleapis.com';
+const crypto = require('crypto');
 
+// Create an express app
 const app = express();
-const server = http.createServer(app);
-const wss = new WebSocket.Server({ server });
+const firestore = require('./firestore');
 
+// Middleware to parse JSON request bodies
 app.use(bodyParser.json());
-app.use(cors());
 
-let connectedUsers = {};
-let gameMasterSocket = null;
+// Secret key used for hashing (should be the same as in your game)
+const secretKey = 'yourSecretKey';
 
-// Helper function to send JSON messages
-function sendJson(ws, type, data) {
-    const message = JSON.stringify({ type, data });
-    ws.send(message);
+// Function to validate the player's score by hashing their ID and score
+function validateScore(player, clientHash, secretKey) {
+    const message = player.id + player.score.toString();
+
+    // Generate the hash on the server side
+    const hash = crypto.createHmac('sha256', secretKey)
+        .update(message)
+        .digest('hex');
+
+    // Compare the generated hash with the client's hash
+    return hash === clientHash;
 }
 
-wss.on('connection', (ws, request) => {
+// API endpoint to submit the player's score
+app.post('/api/submitScore', async (req, res) => {
+    // Extract playerJson and hash from the request body
+    const { playerJson, hash } = req.body;
 
-    const origin = request.headers.origin;
-
-    if (origin !== allowedOrigin) {
-        console.log('Connection from disallowed origin:', origin);
-        ws.terminate(); // Disconnect the client immediately
-        return;
+    if (!playerJson || !hash) {
+        return res.status(400).json({ success: false, message: 'Missing player data or hash!' });
     }
 
-    console.log('A user connected', request.headers);
-    console.log('From origin: ', request.headers.origin);
+    // Parse the player's JSON
+    let player;
+    try {
+        player = JSON.parse(playerJson);
+    } catch (error) {
+        return res.status(400).json({ success: false, message: 'Invalid player JSON!' });
+    }
 
-    ws.on('message', async (message) => {
-        const { type, data } = JSON.parse(message);
-        console.log('Message received:', type, data);
+    // Validate the player's score using the hash
+    if (validateScore(player, hash, secretKey)) {
+        try {
+            // Await the result of adding the player to Firestore
+            const uploadedToDB = await firestore.addPlayerHighScore(player);
 
-        switch (type) {
-            case 'identify':
-                connectedUsers[ws._socket.remotePort] = { socket: ws, data };
-                console.log('User identified:', data);
-                const id_data = JSON.parse(data);
-                if (id_data.type === 'GameMaster') {
-                    gameMasterSocket = ws;
-                    console.log('Game Master registered with id:', ws._socket.remotePort);
-                }
-                break;
-
-            case 'new-player':
-                const player = JSON.parse(data);
-                console.log('Received new-player event:', JSON.stringify(player, null, 2));
-                if (gameMasterSocket) {
-                    console.log("Emitting new-player event to Game Master");
-                    sendJson(gameMasterSocket, 'new-player', player);
-                }
-                await firestore.addPlayerToFirestore(player);
-                break;
-
-            case 'player-score':
-                const player_score = JSON.parse(data);
-                console.log('Received player-score event:', JSON.stringify(player_score, null, 2));
-                if (gameMasterSocket) {
-                    console.log("Emitting player-score event to Game Master");
-                    sendJson(gameMasterSocket, 'player-score', player_score);
-                }
-                await firestore.addPlayerToFirestore(player_score);
-                break;
-
-            case 'start-game-gm':
-                console.log("Emitting start-game event to all clients");
-                wss.clients.forEach(client => {
-                    if (client.readyState === WebSocket.OPEN) {
-                        sendJson(client, 'start-game', {});
-                    }
-                });
-                break;
-
-            case 'get-current-players':
-                console.log('Received get-current-players event');
-                const current_players = await firestore.getAllPlayersFromFirestore();
-                if (gameMasterSocket) {
-                    console.log("Emitting current-players event to Game Master");
-                    sendJson(gameMasterSocket, 'current-players', current_players);
-                }
-                break;
-            case 'init-new-game':
-                console.log("Initialising new game. Clearing player list.");
-                const currentPlayers = {};
-                await firestore.clearPlayersCollection();
-                if (gameMasterSocket) {
-                    console.log("Emitting current-players event to Game Master");
-                    sendJson(gameMasterSocket, 'current-players', currentPlayers);
-                }
-                break;
-
-            default:
-                console.log('Unknown message type:', type);
-                break;
+            if (uploadedToDB) {
+                return res.json({ success: true, message: 'Score submitted successfully!' });
+            } else {
+                return res.status(500).json({ success: false, message: 'Failed to save score to Firestore!' });
+            }
+        } catch (error) {
+            console.error('Error saving score to Firestore:', error);
+            return res.status(500).json({ success: false, message: 'Internal server error.' });
         }
-    });
-
-    ws.on('close', () => { // Check if the user was identified and exists in connectedUsers
-
-        if (connectedUsers[ws._socket.remotePort]) {
-        const userInfo = JSON.parse(connectedUsers[ws._socket.remotePort].data);
-        console.log(`A user disconnected: Type = ${userInfo.type}, ID = ${userInfo.id}`);
-
-        // If the disconnected user is the Game Master, clear the gameMasterSocket
-        if (userInfo.type === 'GameMaster') {
-            gameMasterSocket = null;
-        }
-        // Remove the user from connectedUsers
-        delete connectedUsers[ws._socket.remotePort];
     } else {
-        console.log('A user disconnected, but no user information found.');
+        // If invalid, reject the score
+        return res.status(400).json({ success: false, message: 'Invalid score submission!' });
     }
-    });
-
 });
 
-app.get('/', (req, res) => {
-    res.send('WebSocket server is running.');
-});
-
-const PORT = process.env.PORT || 8080;  // Use the PORT environment variable if provided, otherwise default to 8080
-server.listen(PORT, () => {
-    console.log(`Server running at http://localhost:${PORT}/`);
+// Start the server on port 3000
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`);
 });

@@ -37,7 +37,7 @@ const addPlayerHighScore = async (player)  => {
 const getHighScores = async () => {
     try {
         const playersCollection = firestore.collection(HIGH_SCORE_COLLECTION);
-        const snapshot = await playersCollection.orderBy('score', 'desc').get();
+        const snapshot = await playersCollection.orderBy('score', 'desc').limit(10).get();
 
         if (snapshot.empty) {
             console.log('No matching documents.');

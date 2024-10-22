@@ -2,7 +2,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const crypto = require('crypto');
-const { secretKey } = require('./config');
+const {secretKey} = require('./config');
 
 const serverVersion = '0.1.4 REST';
 
@@ -14,13 +14,17 @@ const rateLimit = require('express-rate-limit');
 
 const app = express();
 const firestore = require('./firestore');
+const google_translate = require('./google_translate');
 
 const corsOptions = {
     origin: (origin, callback) => {
         console.log(`Request Origin: ${origin}`);
-        if (origin === allowedOrigin || !origin) { // Allows server-to-server communication and localhost during testing
+        if (origin === allowedOrigin) { // Allows server-to-server communication and localhost during testing
             console.log(`Origin: ${origin} allowed.`);
             callback(null, true);
+        } else if (!origin) {      // comment out for deploy
+            console.log(`Origin: ${origin} allowed.`); // comment out for deploy
+            callback(null, true); // comment out for deploy
         } else {
             console.log(`Origin: ${origin} not allowed!`);
             callback(new Error('Not allowed by CORS'));
@@ -46,10 +50,12 @@ function validateUserAgent(req, res, next) {
     if (userAgent && (userAgent.startsWith(allowedUserAgent) || allowedBrowserAgents.some(agent => userAgent.includes(agent)))) {
         // If the user agent matches UnityPlayer or a valid browser, allow the request
         next();
+    } else if (userAgent.startsWith("Apache-HttpClient")) { // comment for deploy
+        next(); // comment for deploy
     } else {
         console.log(`User agent: ${userAgent} is forbidden`);
         // If it doesn't match, reject the request
-        return res.status(403).json({ success: false, message: 'Forbidden: Invalid User-Agent' });
+        return res.status(403).json({success: false, message: 'Forbidden: Invalid User-Agent'});
     }
 }
 
@@ -94,10 +100,10 @@ function validateScore(player, clientHash, secretKey) {
 // API endpoint to submit the player's score
 app.post('/api/submitScore', async (req, res) => {
     // Extract playerJson and hash from the request body
-    const { playerJson, hash } = req.body;
+    const {playerJson, hash} = req.body;
 
     if (!playerJson || !hash) {
-        return res.status(400).json({ success: false, message: 'Missing player data or hash!' });
+        return res.status(400).json({success: false, message: 'Missing player data or hash!'});
     }
 
     // Parse the player's JSON
@@ -105,7 +111,7 @@ app.post('/api/submitScore', async (req, res) => {
     try {
         player = JSON.parse(playerJson);
     } catch (error) {
-        return res.status(400).json({ success: false, message: 'Invalid player JSON!' });
+        return res.status(400).json({success: false, message: 'Invalid player JSON!'});
     }
 
     // Validate the player's score using the hash
@@ -115,17 +121,17 @@ app.post('/api/submitScore', async (req, res) => {
             const uploadedToDB = await firestore.addPlayerHighScore(player);
 
             if (uploadedToDB) {
-                return res.json({ success: true, message: 'Score submitted successfully!' });
+                return res.json({success: true, message: 'Score submitted successfully!'});
             } else {
-                return res.status(500).json({ success: false, message: 'Failed to save score to Firestore!' });
+                return res.status(500).json({success: false, message: 'Failed to save score to Firestore!'});
             }
         } catch (error) {
             console.error('Error saving score to Firestore:', error);
-            return res.status(500).json({ success: false, message: 'Internal server error.' });
+            return res.status(500).json({success: false, message: 'Internal server error.'});
         }
     } else {
         // If invalid, reject the score
-        return res.status(400).json({ success: false, message: 'Invalid score submission!' });
+        return res.status(400).json({success: false, message: 'Invalid score submission!'});
     }
 });
 
@@ -134,13 +140,54 @@ app.get('/api/highscores', async (req, res) => {
         const highscores = await firestore.getHighScores();
 
         if (highscores.length > 0) {
-            return res.json({ success: true, highscores });
+            return res.json({success: true, highscores});
         } else {
-            return res.status(404).json({ success: false, message: 'No high scores found' });
+            return res.status(404).json({success: false, message: 'No high scores found'});
         }
     } catch (error) {
         console.error('Error fetching high scores:', error);
-        return res.status(500).json({ success: false, message: 'Internal server error' });
+        return res.status(500).json({success: false, message: 'Internal server error'});
+    }
+});
+
+app.post('/api/translate', async (req, res) => {
+
+    try {
+        const {playerJson, hash, word, language} = req.body;
+
+        if (!playerJson || !hash) {
+            return res.status(400).json({success: false, message: 'Missing player data or hash!'});
+        }
+
+        // Parse the player's JSON
+        let player;
+        try {
+            player = JSON.parse(playerJson);
+        } catch (error) {
+            return res.status(400).json({success: false, message: 'Invalid player JSON!'});
+        }
+
+        // Validate the player using the hash
+        if (validateScore(player, hash, secretKey)) {
+            try {
+                const translation = await google_translate.translateText(word, language);
+                if (translation) {
+                    res.send(translation);
+                } else {
+                    return res.status(500).json({success: false, message: 'Failed to translate!'});
+                }
+
+            } catch (error) {
+                console.error('Error translating:', error);
+                return res.status(500).json({success: false, message: 'Internal server error.'});
+            }
+        } else {
+            // If invalid, reject the score
+            return res.status(400).json({success: false, message: 'Invalid translate submission!'});
+        }
+
+    } catch (error) {
+        res.status(500).send('Translation failed');
     }
 });
 

@@ -28,3 +28,5 @@ async function translateText(text, targetLanguage) {
 module.exports = {
     translateText
 };
+
+// translateText("Rise, Ascend, Fall, Lift", "pl")

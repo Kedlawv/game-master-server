@@ -135,18 +135,37 @@ app.post('/api/submitScore', async (req, res) => {
     }
 });
 
-app.get('/api/highscores', async (req, res) => {
-    try {
-        const highscores = await firestore.getHighScores();
+app.post('/api/highscores', async (req, res) => {
+    const {playerJson, hash} = req.body;
 
-        if (highscores.length > 0) {
-            return res.json({success: true, highscores});
-        } else {
-            return res.status(404).json({success: false, message: 'No high scores found'});
-        }
+    if (!playerJson || !hash) {
+        return res.status(400).json({success: false, message: 'Missing player data or hash!'});
+    }
+
+    // Parse the player's JSON
+    let player;
+    try {
+        player = JSON.parse(playerJson);
     } catch (error) {
-        console.error('Error fetching high scores:', error);
-        return res.status(500).json({success: false, message: 'Internal server error'});
+        return res.status(400).json({success: false, message: 'Invalid player JSON!'});
+    }
+
+    if (validateScore(player, hash, secretKey)) {
+        try {
+            const highscores = await firestore.getHighScores();
+
+            if (highscores.length > 0) {
+                return res.json({success: true, highscores});
+            } else {
+                return res.status(404).json({success: false, message: 'No high scores found'});
+            }
+        } catch (error) {
+            console.error('Error fetching high scores:', error);
+            return res.status(500).json({success: false, message: 'Internal server error'});
+        }
+    } else {
+        // If invalid, reject the score
+        return res.status(400).json({success: false, message: 'Invalid highscore request!'});
     }
 });
 

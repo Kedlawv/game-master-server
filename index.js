@@ -19,10 +19,10 @@ const google_translate = require('./google_translate');
 const corsOptions = {
     origin: (origin, callback) => {
         console.log(`Request Origin: ${origin}`);
-        if (origin === allowedOrigin) { // Allows server-to-server communication and localhost during testing
+        if (origin === allowedOrigin) { // Allows server-to-server communication
             console.log(`Origin: ${origin} allowed.`);
             callback(null, true);
-        } else if (!origin) {      // comment out for deploy
+        } else if (!origin) {      // comment out for deploy, localhost during testing
             console.log(`Origin: ${origin} allowed.`); // comment out for deploy
             callback(null, true); // comment out for deploy
         } else {
@@ -50,7 +50,7 @@ function validateUserAgent(req, res, next) {
     if (userAgent && (userAgent.startsWith(allowedUserAgent) || allowedBrowserAgents.some(agent => userAgent.includes(agent)))) {
         // If the user agent matches UnityPlayer or a valid browser, allow the request
         next();
-    } else if (userAgent.startsWith("Apache-HttpClient")) { // comment for deploy
+    } else if (userAgent.startsWith("Apache-HttpClient")) { // comment for deploy, IDE during testing
         next(); // comment for deploy
     } else {
         console.log(`User agent: ${userAgent} is forbidden`);

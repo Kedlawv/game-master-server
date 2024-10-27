@@ -1,4 +1,6 @@
 // Imports the Google Cloud client library
+const fs = require('fs')
+
 const {Translate} = require('@google-cloud/translate').v2;
 
 const path = require('path');
@@ -25,8 +27,16 @@ async function translateText(text, targetLanguage) {
     return translations[0];
 }
 
+async function getSupportedLanguages() {
+    const result = await translate.getLanguages();
+    const languagesJson = JSON.stringify(result, null, 2);
+
+    fs.writeFileSync('languages.json', languagesJson,'utf8');
+}
+
 module.exports = {
     translateText
 };
 
 // translateText("Rise, Ascend, Fall, Lift", "pl")
+getSupportedLanguages();

@@ -39,4 +39,4 @@ module.exports = {
 };
 
 // translateText("Rise, Ascend, Fall, Lift", "pl")
-getSupportedLanguages();
+// getSupportedLanguages();

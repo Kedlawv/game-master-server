@@ -4,7 +4,7 @@ const bodyParser = require('body-parser');
 const crypto = require('crypto');
 const {secretKey} = require('./config');
 
-const serverVersion = '0.1.4 REST';
+const serverVersion = '0.1.5 REST GT';
 
 // Create an express app
 const cors = require('cors');
@@ -173,6 +173,7 @@ app.post('/api/translate', async (req, res) => {
 
     try {
         const {playerJson, hash, word, language} = req.body;
+        console.log("Sending for translation: " + word);
 
         if (!playerJson || !hash) {
             return res.status(400).json({success: false, message: 'Missing player data or hash!'});

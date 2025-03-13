@@ -13,10 +13,6 @@
       "name": "Acholi"
     },
     {
-      "code": "aa",
-      "name": "Afar"
-    },
-    {
       "code": "af",
       "name": "Afrikaans"
     },
@@ -45,10 +41,6 @@
       "name": "Assamese"
     },
     {
-      "code": "av",
-      "name": "Avar"
-    },
-    {
       "code": "awa",
       "name": "Awadhi"
     },
@@ -65,16 +57,8 @@
       "name": "Balinese"
     },
     {
-      "code": "bal",
-      "name": "Baluchi"
-    },
-    {
       "code": "bm",
       "name": "Bambara"
-    },
-    {
-      "code": "bci",
-      "name": "Baoulé"
     },
     {
       "code": "ba",
@@ -149,14 +133,6 @@
       "name": "Cebuano"
     },
     {
-      "code": "ch",
-      "name": "Chamorro"
-    },
-    {
-      "code": "ce",
-      "name": "Chechen"
-    },
-    {
       "code": "ny",
       "name": "Chichewa"
     },
@@ -167,10 +143,6 @@
     {
       "code": "zh-TW",
       "name": "Chinese (Traditional)"
-    },
-    {
-      "code": "chk",
-      "name": "Chuukese"
     },
     {
       "code": "cv",
@@ -197,10 +169,6 @@
       "name": "Danish"
     },
     {
-      "code": "fa-AF",
-      "name": "Dari"
-    },
-    {
       "code": "din",
       "name": "Dinka"
     },
@@ -219,10 +187,6 @@
     {
       "code": "nl",
       "name": "Dutch"
-    },
-    {
-      "code": "dyu",
-      "name": "Dyula"
     },
     {
       "code": "dz",
@@ -245,10 +209,6 @@
       "name": "Ewe"
     },
     {
-      "code": "fo",
-      "name": "Faroese"
-    },
-    {
       "code": "fj",
       "name": "Fijian"
     },
@@ -261,20 +221,12 @@
       "name": "Finnish"
     },
     {
-      "code": "fon",
-      "name": "Fon"
-    },
-    {
       "code": "fr",
       "name": "French"
     },
     {
       "code": "fy",
       "name": "Frisian"
-    },
-    {
-      "code": "fur",
-      "name": "Friulian"
     },
     {
       "code": "ff",
@@ -353,10 +305,6 @@
       "name": "Hunsrik"
     },
     {
-      "code": "iba",
-      "name": "Iban"
-    },
-    {
       "code": "is",
       "name": "Icelandic"
     },
@@ -381,10 +329,6 @@
       "name": "Italian"
     },
     {
-      "code": "jam",
-      "name": "Jamaican Patois"
-    },
-    {
       "code": "ja",
       "name": "Japanese"
     },
@@ -393,20 +337,8 @@
       "name": "Javanese"
     },
     {
-      "code": "kac",
-      "name": "Jingpo"
-    },
-    {
-      "code": "kl",
-      "name": "Kalaallisut"
-    },
-    {
       "code": "kn",
       "name": "Kannada"
-    },
-    {
-      "code": "kr",
-      "name": "Kanuri"
     },
     {
       "code": "pam",
@@ -417,10 +349,6 @@
       "name": "Kazakh"
     },
     {
-      "code": "kha",
-      "name": "Khasi"
-    },
-    {
       "code": "km",
       "name": "Khmer"
     },
@@ -429,24 +357,12 @@
       "name": "Kiga"
     },
     {
-      "code": "kg",
-      "name": "Kikongo"
-    },
-    {
       "code": "rw",
       "name": "Kinyarwanda"
     },
     {
       "code": "ktu",
       "name": "Kituba"
-    },
-    {
-      "code": "trp",
-      "name": "Kokborok"
-    },
-    {
-      "code": "kv",
-      "name": "Komi"
     },
     {
       "code": "gom",
@@ -521,10 +437,6 @@
       "name": "Macedonian"
     },
     {
-      "code": "mad",
-      "name": "Madurese"
-    },
-    {
       "code": "mai",
       "name": "Maithili"
     },
@@ -553,32 +465,12 @@
       "name": "Maltese"
     },
     {
-      "code": "mam",
-      "name": "Mam"
-    },
-    {
-      "code": "gv",
-      "name": "Manx"
-    },
-    {
       "code": "mi",
       "name": "Maori"
     },
     {
       "code": "mr",
       "name": "Marathi"
-    },
-    {
-      "code": "mh",
-      "name": "Marshallese"
-    },
-    {
-      "code": "mwr",
-      "name": "Marwadi"
-    },
-    {
-      "code": "mfe",
-      "name": "Mauritian Creole"
     },
     {
       "code": "chm",
@@ -605,14 +497,6 @@
       "name": "Myanmar (Burmese)"
     },
     {
-      "code": "nhe",
-      "name": "Nahuatl (Eastern Huasteca)"
-    },
-    {
-      "code": "ndc-ZW",
-      "name": "Ndau"
-    },
-    {
       "code": "nr",
       "name": "Ndebele (South)"
     },
@@ -623,10 +507,6 @@
     {
       "code": "ne",
       "name": "Nepali"
-    },
-    {
-      "code": "bm-Nkoo",
-      "name": "NKo"
     },
     {
       "code": "nso",
@@ -653,10 +533,6 @@
       "name": "Oromo"
     },
     {
-      "code": "os",
-      "name": "Ossetian"
-    },
-    {
       "code": "pag",
       "name": "Pangasinan"
     },
@@ -681,20 +557,12 @@
       "name": "Portuguese"
     },
     {
-      "code": "pt-PT",
-      "name": "Portuguese (Portugal)"
-    },
-    {
       "code": "pa",
       "name": "Punjabi"
     },
     {
       "code": "pa-Arab",
       "name": "Punjabi (Shahmukhi)"
-    },
-    {
-      "code": "kek",
-      "name": "Q'eqchi'"
     },
     {
       "code": "qu",
@@ -717,10 +585,6 @@
       "name": "Russian"
     },
     {
-      "code": "se",
-      "name": "Sami (North)"
-    },
-    {
       "code": "sm",
       "name": "Samoan"
     },
@@ -731,10 +595,6 @@
     {
       "code": "sa",
       "name": "Sanskrit"
-    },
-    {
-      "code": "sat-Latn",
-      "name": "Santali"
     },
     {
       "code": "gd",
@@ -797,10 +657,6 @@
       "name": "Sundanese"
     },
     {
-      "code": "sus",
-      "name": "Susu"
-    },
-    {
       "code": "sw",
       "name": "Swahili"
     },
@@ -813,20 +669,8 @@
       "name": "Swedish"
     },
     {
-      "code": "ty",
-      "name": "Tahitian"
-    },
-    {
       "code": "tg",
       "name": "Tajik"
-    },
-    {
-      "code": "ber-Latn",
-      "name": "Tamazight"
-    },
-    {
-      "code": "ber",
-      "name": "Tamazight (Tifinagh)"
     },
     {
       "code": "ta",
@@ -849,24 +693,8 @@
       "name": "Thai"
     },
     {
-      "code": "bo",
-      "name": "Tibetan"
-    },
-    {
       "code": "ti",
       "name": "Tigrinya"
-    },
-    {
-      "code": "tiv",
-      "name": "Tiv"
-    },
-    {
-      "code": "tpi",
-      "name": "Tok Pisin"
-    },
-    {
-      "code": "to",
-      "name": "Tongan"
     },
     {
       "code": "ts",
@@ -877,14 +705,6 @@
       "name": "Tswana"
     },
     {
-      "code": "tcy",
-      "name": "Tulu"
-    },
-    {
-      "code": "tum",
-      "name": "Tumbuka"
-    },
-    {
       "code": "tr",
       "name": "Turkish"
     },
@@ -893,16 +713,8 @@
       "name": "Turkmen"
     },
     {
-      "code": "tyv",
-      "name": "Tuvan"
-    },
-    {
       "code": "ak",
       "name": "Twi"
-    },
-    {
-      "code": "udm",
-      "name": "Udmurt"
     },
     {
       "code": "uk",
@@ -921,36 +733,16 @@
       "name": "Uzbek"
     },
     {
-      "code": "ve",
-      "name": "Venda"
-    },
-    {
-      "code": "vec",
-      "name": "Venetian"
-    },
-    {
       "code": "vi",
       "name": "Vietnamese"
-    },
-    {
-      "code": "war",
-      "name": "Waray"
     },
     {
       "code": "cy",
       "name": "Welsh"
     },
     {
-      "code": "wo",
-      "name": "Wolof"
-    },
-    {
       "code": "xh",
       "name": "Xhosa"
-    },
-    {
-      "code": "sah",
-      "name": "Yakut"
     },
     {
       "code": "yi",
@@ -963,10 +755,6 @@
     {
       "code": "yua",
       "name": "Yucatec Maya"
-    },
-    {
-      "code": "zap",
-      "name": "Zapotec"
     },
     {
       "code": "zu",
@@ -1001,10 +789,6 @@
           "name": "Acholi"
         },
         {
-          "language": "aa",
-          "name": "Afar"
-        },
-        {
           "language": "af",
           "name": "Afrikaans"
         },
@@ -1033,10 +817,6 @@
           "name": "Assamese"
         },
         {
-          "language": "av",
-          "name": "Avar"
-        },
-        {
           "language": "awa",
           "name": "Awadhi"
         },
@@ -1053,16 +833,8 @@
           "name": "Balinese"
         },
         {
-          "language": "bal",
-          "name": "Baluchi"
-        },
-        {
           "language": "bm",
           "name": "Bambara"
-        },
-        {
-          "language": "bci",
-          "name": "Baoulé"
         },
         {
           "language": "ba",
@@ -1137,14 +909,6 @@
           "name": "Cebuano"
         },
         {
-          "language": "ch",
-          "name": "Chamorro"
-        },
-        {
-          "language": "ce",
-          "name": "Chechen"
-        },
-        {
           "language": "ny",
           "name": "Chichewa"
         },
@@ -1155,10 +919,6 @@
         {
           "language": "zh-TW",
           "name": "Chinese (Traditional)"
-        },
-        {
-          "language": "chk",
-          "name": "Chuukese"
         },
         {
           "language": "cv",
@@ -1185,10 +945,6 @@
           "name": "Danish"
         },
         {
-          "language": "fa-AF",
-          "name": "Dari"
-        },
-        {
           "language": "din",
           "name": "Dinka"
         },
@@ -1207,10 +963,6 @@
         {
           "language": "nl",
           "name": "Dutch"
-        },
-        {
-          "language": "dyu",
-          "name": "Dyula"
         },
         {
           "language": "dz",
@@ -1233,10 +985,6 @@
           "name": "Ewe"
         },
         {
-          "language": "fo",
-          "name": "Faroese"
-        },
-        {
           "language": "fj",
           "name": "Fijian"
         },
@@ -1249,20 +997,12 @@
           "name": "Finnish"
         },
         {
-          "language": "fon",
-          "name": "Fon"
-        },
-        {
           "language": "fr",
           "name": "French"
         },
         {
           "language": "fy",
           "name": "Frisian"
-        },
-        {
-          "language": "fur",
-          "name": "Friulian"
         },
         {
           "language": "ff",
@@ -1341,10 +1081,6 @@
           "name": "Hunsrik"
         },
         {
-          "language": "iba",
-          "name": "Iban"
-        },
-        {
           "language": "is",
           "name": "Icelandic"
         },
@@ -1369,10 +1105,6 @@
           "name": "Italian"
         },
         {
-          "language": "jam",
-          "name": "Jamaican Patois"
-        },
-        {
           "language": "ja",
           "name": "Japanese"
         },
@@ -1381,20 +1113,8 @@
           "name": "Javanese"
         },
         {
-          "language": "kac",
-          "name": "Jingpo"
-        },
-        {
-          "language": "kl",
-          "name": "Kalaallisut"
-        },
-        {
           "language": "kn",
           "name": "Kannada"
-        },
-        {
-          "language": "kr",
-          "name": "Kanuri"
         },
         {
           "language": "pam",
@@ -1405,10 +1125,6 @@
           "name": "Kazakh"
         },
         {
-          "language": "kha",
-          "name": "Khasi"
-        },
-        {
           "language": "km",
           "name": "Khmer"
         },
@@ -1417,24 +1133,12 @@
           "name": "Kiga"
         },
         {
-          "language": "kg",
-          "name": "Kikongo"
-        },
-        {
           "language": "rw",
           "name": "Kinyarwanda"
         },
         {
           "language": "ktu",
           "name": "Kituba"
-        },
-        {
-          "language": "trp",
-          "name": "Kokborok"
-        },
-        {
-          "language": "kv",
-          "name": "Komi"
         },
         {
           "language": "gom",
@@ -1509,10 +1213,6 @@
           "name": "Macedonian"
         },
         {
-          "language": "mad",
-          "name": "Madurese"
-        },
-        {
           "language": "mai",
           "name": "Maithili"
         },
@@ -1541,32 +1241,12 @@
           "name": "Maltese"
         },
         {
-          "language": "mam",
-          "name": "Mam"
-        },
-        {
-          "language": "gv",
-          "name": "Manx"
-        },
-        {
           "language": "mi",
           "name": "Maori"
         },
         {
           "language": "mr",
           "name": "Marathi"
-        },
-        {
-          "language": "mh",
-          "name": "Marshallese"
-        },
-        {
-          "language": "mwr",
-          "name": "Marwadi"
-        },
-        {
-          "language": "mfe",
-          "name": "Mauritian Creole"
         },
         {
           "language": "chm",
@@ -1593,14 +1273,6 @@
           "name": "Myanmar (Burmese)"
         },
         {
-          "language": "nhe",
-          "name": "Nahuatl (Eastern Huasteca)"
-        },
-        {
-          "language": "ndc-ZW",
-          "name": "Ndau"
-        },
-        {
           "language": "nr",
           "name": "Ndebele (South)"
         },
@@ -1611,10 +1283,6 @@
         {
           "language": "ne",
           "name": "Nepali"
-        },
-        {
-          "language": "bm-Nkoo",
-          "name": "NKo"
         },
         {
           "language": "nso",
@@ -1641,10 +1309,6 @@
           "name": "Oromo"
         },
         {
-          "language": "os",
-          "name": "Ossetian"
-        },
-        {
           "language": "pag",
           "name": "Pangasinan"
         },
@@ -1669,20 +1333,12 @@
           "name": "Portuguese"
         },
         {
-          "language": "pt-PT",
-          "name": "Portuguese (Portugal)"
-        },
-        {
           "language": "pa",
           "name": "Punjabi"
         },
         {
           "language": "pa-Arab",
           "name": "Punjabi (Shahmukhi)"
-        },
-        {
-          "language": "kek",
-          "name": "Q'eqchi'"
         },
         {
           "language": "qu",
@@ -1705,10 +1361,6 @@
           "name": "Russian"
         },
         {
-          "language": "se",
-          "name": "Sami (North)"
-        },
-        {
           "language": "sm",
           "name": "Samoan"
         },
@@ -1719,10 +1371,6 @@
         {
           "language": "sa",
           "name": "Sanskrit"
-        },
-        {
-          "language": "sat-Latn",
-          "name": "Santali"
         },
         {
           "language": "gd",
@@ -1785,10 +1433,6 @@
           "name": "Sundanese"
         },
         {
-          "language": "sus",
-          "name": "Susu"
-        },
-        {
           "language": "sw",
           "name": "Swahili"
         },
@@ -1801,20 +1445,8 @@
           "name": "Swedish"
         },
         {
-          "language": "ty",
-          "name": "Tahitian"
-        },
-        {
           "language": "tg",
           "name": "Tajik"
-        },
-        {
-          "language": "ber-Latn",
-          "name": "Tamazight"
-        },
-        {
-          "language": "ber",
-          "name": "Tamazight (Tifinagh)"
         },
         {
           "language": "ta",
@@ -1837,24 +1469,8 @@
           "name": "Thai"
         },
         {
-          "language": "bo",
-          "name": "Tibetan"
-        },
-        {
           "language": "ti",
           "name": "Tigrinya"
-        },
-        {
-          "language": "tiv",
-          "name": "Tiv"
-        },
-        {
-          "language": "tpi",
-          "name": "Tok Pisin"
-        },
-        {
-          "language": "to",
-          "name": "Tongan"
         },
         {
           "language": "ts",
@@ -1865,14 +1481,6 @@
           "name": "Tswana"
         },
         {
-          "language": "tcy",
-          "name": "Tulu"
-        },
-        {
-          "language": "tum",
-          "name": "Tumbuka"
-        },
-        {
           "language": "tr",
           "name": "Turkish"
         },
@@ -1881,16 +1489,8 @@
           "name": "Turkmen"
         },
         {
-          "language": "tyv",
-          "name": "Tuvan"
-        },
-        {
           "language": "ak",
           "name": "Twi"
-        },
-        {
-          "language": "udm",
-          "name": "Udmurt"
         },
         {
           "language": "uk",
@@ -1909,36 +1509,16 @@
           "name": "Uzbek"
         },
         {
-          "language": "ve",
-          "name": "Venda"
-        },
-        {
-          "language": "vec",
-          "name": "Venetian"
-        },
-        {
           "language": "vi",
           "name": "Vietnamese"
-        },
-        {
-          "language": "war",
-          "name": "Waray"
         },
         {
           "language": "cy",
           "name": "Welsh"
         },
         {
-          "language": "wo",
-          "name": "Wolof"
-        },
-        {
           "language": "xh",
           "name": "Xhosa"
-        },
-        {
-          "language": "sah",
-          "name": "Yakut"
         },
         {
           "language": "yi",
@@ -1951,10 +1531,6 @@
         {
           "language": "yua",
           "name": "Yucatec Maya"
-        },
-        {
-          "language": "zap",
-          "name": "Zapotec"
         },
         {
           "language": "zu",
